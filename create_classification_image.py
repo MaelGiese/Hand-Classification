@@ -10,22 +10,31 @@ import argparse
 import os
 import keyboard
 
-image_class = 'OK'
+image_class = 'Palm'
 
-detection_graph, sess = detector_utils.load_inference_graph()
-dataset_path = 'hand_classification/Dataset/' + image_class + '/'
+dataset_path = 'hand_classification/Dataset/'
+image_class_path = 'hand_classification/Dataset/' + image_class + '/'
 
-dir_index = sum([len(dir) for r, dir, f in os.walk(dataset_path)])
+if not os.path.exists(dataset_path):
+    os.mkdir(dataset_path)
+    print("Directory ", dataset_path, " Created ")
+
+if not os.path.exists(image_class_path):
+    os.mkdir(image_class_path)
+    print("Directory ", image_class_path, " Created ")
+
+dir_index = sum([len(dir) for r, dir, f in os.walk(image_class_path)])
 
 print(dir_index)
-dir_path = dataset_path + 'SET_' + str(dir_index)
+set_path = image_class_path + 'SET_' + str(dir_index)
 
-if not os.path.exists(dir_path):
-    os.mkdir(dir_path)
-    print("Directory " , dir_path ,  " Created ")
+if not os.path.exists(set_path):
+    os.mkdir(set_path)
+    print("Directory ", set_path, " Created ")
 
-dir_path = dir_path + '/'
+dir_path = set_path + '/'
 
+detection_graph, sess = detector_utils.load_inference_graph()
 green = (77, 255, 9)
 red = (255, 45, 56)
 
