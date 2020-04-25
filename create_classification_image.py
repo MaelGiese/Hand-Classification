@@ -13,9 +13,18 @@ import keyboard
 image_class = 'OK'
 
 detection_graph, sess = detector_utils.load_inference_graph()
-dataset_path = 'hand_classification/Dataset/'
+dataset_path = 'hand_classification/Dataset/' + image_class + '/'
 
-file_index = sum([len(files) for r, d, files in os.walk(dataset_path + image_class + '/')])
+dir_index = sum([len(dir) for r, dir, f in os.walk(dataset_path)])
+
+print(dir_index)
+dir_path = dataset_path + 'SET_' + str(dir_index)
+
+if not os.path.exists(dir_path):
+    os.mkdir(dir_path)
+    print("Directory " , dir_path ,  " Created ")
+
+dir_path = dir_path + '/'
 
 green = (77, 255, 9)
 red = (255, 45, 56)
@@ -94,6 +103,7 @@ if __name__ == '__main__':
 
     record = False
     color = green
+    img_index = 0
 
     while True:
         try:  # used try so that if user pressed other than the given key error will not be shown
@@ -132,9 +142,10 @@ if __name__ == '__main__':
             cropped_output = cv2.cvtColor(cropped_output, cv2.COLOR_RGB2BGR)
             if args.display > 0:
                 if record:
-                    cv2.imwrite(dataset_path + image_class + '/' + image_class + '_' + str(file_index) + '.png',
+                    cv2.imwrite(dir_path + image_class + '_' + str(img_index) + '.png',
                                 cropped_output)
-                    print('Image' + str(file_index) + ' saved !')
+                    print('Image' + str(img_index) + ' saved !')
+                    img_index = img_index + 1
 
                 cv2.namedWindow('Cropped', cv2.WINDOW_NORMAL)
                 cv2.resizeWindow('Cropped', 450, 300)
@@ -165,5 +176,4 @@ if __name__ == '__main__':
         if record:
             record = False
             color = (77, 255, 9)
-            file_index = file_index + 1
-
+            file_index = dir_index + 1

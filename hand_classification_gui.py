@@ -36,7 +36,7 @@ def draw_classes_probabilities(values, names=None):
 
 def test():
     values = [0.9, 0.6, 0.21]
-    names = ['Fist', 'Palm', 'Garbage']
+    names = ['Fist', 'OK', 'Palm']
     while True:
         for i in range(len(values)):
             values[i] = randint(0, 100) / 100

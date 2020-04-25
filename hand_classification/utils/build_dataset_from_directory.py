@@ -18,13 +18,17 @@ def build_dataset(dir_path, IMAGE_WIDTH, IMAGE_HEIGHT):
         if hand_class in req_poses:
             print(">> Working on class : " + hand_class)
 
-            for f in os.listdir(dir_path + hand_class):
-                ext = os.path.splitext(f)[1]
-                if ext.lower() in valid_images:
-                    image = cv2.imread(os.path.join(dir_path + hand_class, f))
-                    image = cv2.resize(image, (IMAGE_WIDTH, IMAGE_HEIGHT))
-                    images.append(image)
-                    images_class.append(count_classes)
+            sets = os.listdir(dir_path + hand_class)
+            for set in sets:
+                image_dir = dir_path + hand_class + '/' + set + '/'
+
+                for f in os.listdir(image_dir):
+                    ext = os.path.splitext(f)[1]
+                    if ext.lower() in valid_images:
+                        image = cv2.imread(os.path.join(image_dir, f))
+                        image = cv2.resize(image, (IMAGE_WIDTH, IMAGE_HEIGHT))
+                        images.append(image)
+                        images_class.append(count_classes)
             count_classes += 1
 
     images = np.array(images)
