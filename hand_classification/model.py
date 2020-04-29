@@ -1,10 +1,13 @@
 import tensorflow.keras as keras
+from sklearn.model_selection import train_test_split
+from sklearn.utils import shuffle
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, Dropout, Flatten
 from tensorflow.keras.layers import Conv2D, MaxPooling2D
 from tensorflow.keras.layers import BatchNormalization
 
 import hand_classification.utils.build_dataset_from_directory as dataset
+import hand_classification.utils.data_augmentation as data_augmentation
 import tensorflow as tf
 import numpy as np
 import matplotlib.pyplot as plt
@@ -12,45 +15,62 @@ import matplotlib.pyplot as plt
 
 def train():
     batch_size = 256
-    epochs = 200
-    learning_rate = 0.0001
+    epochs = 60
+    learning_rate = 0.0005
     model_name = "models/hand_classification_model.h5"
 
-    dir_path = 'Dataset/'
+    train_path = 'Dataset/Train/'
+    test_path = 'Dataset/Test/'
     IMAGE_WIDTH = 64
     IMAGE_HEIGHT = 64
-
-    # the data, shuffled and split between train and test sets
-    x_train, x_test, y_train, y_test = dataset.load_data(dir_path, IMAGE_WIDTH, IMAGE_HEIGHT)
-
-    num_classes = len(np.unique(y_test))
-
     input_shape = (IMAGE_WIDTH, IMAGE_HEIGHT, 3)
+    augment_data = True
+
+    # Build train dataset
+    x_train, y_train = dataset.build_dataset(train_path, IMAGE_WIDTH, IMAGE_HEIGHT)
+    # Build test dataset
+    x_test, y_test = dataset.build_dataset(test_path, IMAGE_WIDTH, IMAGE_HEIGHT)
+
+    num_classes = len(np.unique(y_train))
+
+    ############################ Add augmented data to the training data ####################################
+    if augment_data:
+        x_train_augmented, y_train_augmented = data_augmentation.build_augmented_dataset(train_path,
+                                                                                         IMAGE_WIDTH, IMAGE_HEIGHT,
+                                                                                         flipped=True, saturated=True,
+                                                                                         bright=True, cropped=True,
+                                                                                         grayscaled=True)
+        x_train = np.concatenate((x_train, x_train_augmented), axis=0)
+        y_train = y_train + y_train_augmented
+
+    # Add test dataset to the train dataset
+    # x_train = np.concatenate((x_train, x_test), axis=0)
+    # y_train = y_train + y_test
 
     print('x_train shape:', x_train.shape)
     print(x_train.shape[0], 'train samples')
     print(x_test.shape[0], 'test samples')
 
     # convert class vectors to binary class matrices
-    y_train = keras.utils.to_categorical(y_train, num_classes)
-    y_test = keras.utils.to_categorical(y_test, num_classes)
+    y_train = tf.keras.utils.to_categorical(y_train, num_classes)
+    y_test = tf.keras.utils.to_categorical(y_test, num_classes)
 
     ####### Model structure #######
     model = Sequential()
 
     model.add(Conv2D(32, kernel_size=(10, 10), activation='relu', input_shape=input_shape))
-    model.add(BatchNormalization())
     model.add(MaxPooling2D(pool_size=(2, 2)))
-    model.add(Dropout(0.4))
+    model.add(BatchNormalization())
+    model.add(Dropout(0.5))
 
-    model.add(Conv2D(64, (10, 10), activation='relu'))
-    model.add(BatchNormalization())
+    model.add(Conv2D(64, kernel_size=(5, 5), activation='relu'))
     model.add(MaxPooling2D(pool_size=(2, 2)))
-    model.add(Dropout(0.4))
+    model.add(BatchNormalization())
+    model.add(Dropout(0.5))
 
-    model.add(Conv2D(128, (5, 5), activation='relu'))
-    model.add(BatchNormalization())
+    model.add(Conv2D(96, kernel_size=(5, 5), activation='relu'))
     model.add(MaxPooling2D(pool_size=(2, 2)))
+    model.add(BatchNormalization())
     model.add(Dropout(0.5))
 
     model.add(Flatten())
@@ -61,7 +81,6 @@ def train():
 
     model.add(Dense(128, activation='relu'))
     model.add(BatchNormalization())
-    model.add(Dropout(0.5))
 
     model.add(Dense(num_classes, activation='softmax'))
 

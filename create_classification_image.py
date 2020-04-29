@@ -10,29 +10,42 @@ import argparse
 import os
 import keyboard
 
-image_class = 'Palm'
+train_images = True
 
-dataset_path = 'hand_classification/Dataset/'
-image_class_path = 'hand_classification/Dataset/' + image_class + '/'
+if train_images:
+    dataset_path = 'hand_classification/Dataset/Train/'
+else:
+    dataset_path = 'hand_classification/Dataset/Test/'
+dirs = os.listdir(dataset_path)
 
+class_choice = -1
+while class_choice not in range(0, len(dirs)):
+    i = 0
+    print('Choisir une pose de main :')
+    for dir in dirs:
+        print(str(i) + '. ' + dir)
+        i = i + 1
+
+    class_choice = int(input())
+
+image_class = dirs[class_choice]
+
+image_class_path = dataset_path + image_class + '/'
+
+# Si le répertoire n'existe pas le créer
 if not os.path.exists(dataset_path):
     os.mkdir(dataset_path)
     print("Directory ", dataset_path, " Created ")
 
+# Si le répertoire n'existe pas le créer
 if not os.path.exists(image_class_path):
     os.mkdir(image_class_path)
     print("Directory ", image_class_path, " Created ")
 
 dir_index = sum([len(dir) for r, dir, f in os.walk(image_class_path)])
-
-print(dir_index)
 set_path = image_class_path + 'SET_' + str(dir_index)
 
-if not os.path.exists(set_path):
-    os.mkdir(set_path)
-    print("Directory ", set_path, " Created ")
-
-dir_path = set_path + '/'
+set_path = set_path + '/'
 
 detection_graph, sess = detector_utils.load_inference_graph()
 green = (77, 255, 9)
@@ -113,7 +126,7 @@ if __name__ == '__main__':
     record = False
     color = green
     img_index = 0
-
+    print('APPUYER SUR \'s\' POUR SAUVEGARDER UNE IMAGE !')
     while True:
         try:  # used try so that if user pressed other than the given key error will not be shown
             if keyboard.is_pressed('s'):
@@ -151,7 +164,12 @@ if __name__ == '__main__':
             cropped_output = cv2.cvtColor(cropped_output, cv2.COLOR_RGB2BGR)
             if args.display > 0:
                 if record:
-                    cv2.imwrite(dir_path + image_class + '_' + str(img_index) + '.png',
+                    # Si le répertoire n'existe pas le créer
+                    if not os.path.exists(set_path):
+                        os.mkdir(set_path)
+                        print("Directory ", set_path, " Created ")
+
+                    cv2.imwrite(set_path + image_class + '_' + str(img_index) + '.png',
                                 cropped_output)
                     print('Image' + str(img_index) + ' saved !')
                     img_index = img_index + 1

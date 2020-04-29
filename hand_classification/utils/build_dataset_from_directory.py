@@ -3,6 +3,7 @@ import numpy as np
 import cv2
 from sklearn.model_selection import train_test_split
 from sklearn.utils import shuffle
+import tensorflow as tf
 
 
 def build_dataset(dir_path, IMAGE_WIDTH, IMAGE_HEIGHT):
@@ -37,22 +38,12 @@ def build_dataset(dir_path, IMAGE_WIDTH, IMAGE_HEIGHT):
     return images, images_class
 
 
-def load_data(dir_path, IMAGE_WIDTH, IMAGE_HEIGHT):
-    x, y = build_dataset(dir_path, IMAGE_WIDTH, IMAGE_HEIGHT)
-    x, y = shuffle(x, y, random_state=0)
-    x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=1/4)
-
-    return x_train, x_test, y_train, y_test
-
-
 if __name__ == '__main__':
-    dir_path = '../Dataset/'
+    dir_path = '../Dataset/Train/'
     IMAGE_WIDTH = 28
     IMAGE_HEIGHT = 28
 
-    x_train, x_test, y_train, y_test = load_data(dir_path, IMAGE_WIDTH, IMAGE_HEIGHT)
+    x, y = build_dataset(dir_path, IMAGE_WIDTH, IMAGE_HEIGHT)
 
-    print(x_train.shape)
-    print(y_train)
-    print(x_test.shape)
-    print(y_test)
+    print(x.shape)
+    print(y)
