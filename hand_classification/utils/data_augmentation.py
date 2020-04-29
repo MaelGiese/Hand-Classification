@@ -29,36 +29,71 @@ def build_augmented_dataset(dir_path, IMAGE_WIDTH, IMAGE_HEIGHT, flipped=False, 
                         image = tf.image.resize(image, (IMAGE_WIDTH, IMAGE_HEIGHT))
 
                         if flipped:
+                            # Flip rigth-left
                             flipped_img = tf.image.flip_left_right(image)
                             flipped_img = tf.keras.preprocessing.image.img_to_array(flipped_img)
                             images.append(flipped_img)
                             images_class.append(count_classes)
 
-                        if saturated:
-                            saturated_img = tf.image.adjust_saturation(image, 3)
-                            saturated_img = tf.keras.preprocessing.image.img_to_array(saturated_img)
-                            images.append(saturated_img)
+                            # Flip up-down
+                            flipped_img = tf.image.flip_up_down(image)
+                            flipped_img = tf.keras.preprocessing.image.img_to_array(flipped_img)
+                            images.append(flipped_img)
                             images_class.append(count_classes)
 
-                        if bright:
-                            bright_img = tf.image.adjust_brightness(image, 0.4)
-                            bright_img = tf.keras.preprocessing.image.img_to_array(bright_img)
-                            images.append(bright_img)
-                            images_class.append(count_classes)
-
-                        if cropped:
-                            cropped_img = tf.image.central_crop(image, central_fraction=0.4)
-                            cropped_img = tf.image.resize(cropped_img, (IMAGE_WIDTH, IMAGE_HEIGHT))
-                            cropped_img = tf.keras.preprocessing.image.img_to_array(cropped_img)
-
-                            images.append(cropped_img)
-                            images_class.append(count_classes)
 
                         if grayscaled:
                             grayscaled_img = tf.image.rgb_to_grayscale(image)
                             grayscaled_img = tf.image.grayscale_to_rgb(grayscaled_img)
                             grayscaled_img = tf.keras.preprocessing.image.img_to_array(grayscaled_img)
                             images.append(grayscaled_img)
+                            images_class.append(count_classes)
+
+                        if saturated:
+                            # 3
+                            saturated_img = tf.image.adjust_saturation(image, 3)
+                            saturated_img = tf.keras.preprocessing.image.img_to_array(saturated_img)
+                            images.append(saturated_img)
+                            images_class.append(count_classes)
+
+                            # 5
+                            saturated_img = tf.image.adjust_saturation(image, 5)
+                            saturated_img = tf.keras.preprocessing.image.img_to_array(saturated_img)
+                            images.append(saturated_img)
+                            images_class.append(count_classes)
+
+                        if bright:
+                            # 0.2
+                            bright_img = tf.image.adjust_brightness(image, 0.2)
+                            bright_img = tf.keras.preprocessing.image.img_to_array(bright_img)
+                            images.append(bright_img)
+                            images_class.append(count_classes)
+
+                            # 0.4
+                            bright_img = tf.image.adjust_brightness(image, 0.4)
+                            bright_img = tf.keras.preprocessing.image.img_to_array(bright_img)
+                            images.append(bright_img)
+                            images_class.append(count_classes)
+
+                            # 0.6
+                            bright_img = tf.image.adjust_brightness(image, 0.6)
+                            bright_img = tf.keras.preprocessing.image.img_to_array(bright_img)
+                            images.append(bright_img)
+                            images_class.append(count_classes)
+
+                        if cropped:
+                            # 0.2
+                            cropped_img = tf.image.central_crop(image, central_fraction=0.2)
+                            cropped_img = tf.image.resize(cropped_img, (IMAGE_WIDTH, IMAGE_HEIGHT))
+                            cropped_img = tf.keras.preprocessing.image.img_to_array(cropped_img)
+                            images.append(cropped_img)
+                            images_class.append(count_classes)
+
+                            # 0.4
+                            cropped_img = tf.image.central_crop(image, central_fraction=0.4)
+                            cropped_img = tf.image.resize(cropped_img, (IMAGE_WIDTH, IMAGE_HEIGHT))
+                            cropped_img = tf.keras.preprocessing.image.img_to_array(cropped_img)
+                            images.append(cropped_img)
                             images_class.append(count_classes)
 
             count_classes += 1
