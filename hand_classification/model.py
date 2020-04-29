@@ -1,5 +1,4 @@
 import tensorflow.keras as keras
-from sklearn.model_selection import train_test_split
 from sklearn.utils import shuffle
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, Dropout, Flatten
@@ -15,8 +14,8 @@ import matplotlib.pyplot as plt
 
 def train():
     batch_size = 512
-    epochs = 40
-    learning_rate = 0.001
+    epochs = 150
+    learning_rate = 0.0003
     model_name = "models/hand_classification_model.h5"
 
     train_path = 'Dataset/Train/'

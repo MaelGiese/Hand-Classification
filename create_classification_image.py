@@ -12,10 +12,25 @@ import keyboard
 
 train_images = True
 
+classes = ['Fist', 'OK', 'Palm']
+
 if train_images:
     dataset_path = 'hand_classification/Dataset/Train/'
 else:
     dataset_path = 'hand_classification/Dataset/Test/'
+
+# Si le répertoire n'existe pas le créer
+if not os.path.exists(dataset_path):
+    os.mkdir(dataset_path)
+    print("Directory ", dataset_path, " Created ")
+
+for hand_class in classes:
+    # Si le répertoire n'existe pas le créer
+    hand_class_path = dataset_path + hand_class + '/'
+    if not os.path.exists(hand_class_path):
+        os.mkdir(hand_class_path)
+        print("Directory ", hand_class_path, " Created ")
+
 dirs = os.listdir(dataset_path)
 
 class_choice = -1
@@ -31,11 +46,6 @@ while class_choice not in range(0, len(dirs)):
 image_class = dirs[class_choice]
 
 image_class_path = dataset_path + image_class + '/'
-
-# Si le répertoire n'existe pas le créer
-if not os.path.exists(dataset_path):
-    os.mkdir(dataset_path)
-    print("Directory ", dataset_path, " Created ")
 
 # Si le répertoire n'existe pas le créer
 if not os.path.exists(image_class_path):
