@@ -14,6 +14,13 @@ train_images = True
 
 classes = ['Fist', 'OK', 'Palm']
 
+dataset_path = 'hand_classification/Dataset'
+
+# Si le répertoire n'existe pas le créer
+if not os.path.exists(dataset_path):
+    os.mkdir(dataset_path)
+    print("Directory ", dataset_path, " Created ")
+
 if train_images:
     dataset_path = 'hand_classification/Dataset/Train/'
 else:
