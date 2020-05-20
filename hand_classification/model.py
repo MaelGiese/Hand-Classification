@@ -14,8 +14,8 @@ import matplotlib.pyplot as plt
 
 def train():
     batch_size = 512
-    epochs = 150
-    learning_rate = 0.0003
+    epochs = 15
+    learning_rate = 0.01
     model_name = "models/hand_classification_model.h5"
 
     train_path = 'Dataset/Train/'
@@ -23,6 +23,7 @@ def train():
     IMAGE_WIDTH = 64
     IMAGE_HEIGHT = 64
     input_shape = (IMAGE_WIDTH, IMAGE_HEIGHT, 3)
+
     augment_data = True
     merge_train_and_test = False
 
@@ -43,7 +44,7 @@ def train():
         x_train = np.concatenate((x_train, x_train_augmented), axis=0)
         y_train = y_train + y_train_augmented
 
-    # Add test dataset to the train dataset
+    ############################# Add test dataset to the train dataset ########################################
     if merge_train_and_test:
         x_test_augmented, y_test_augmented = data_augmentation.build_augmented_dataset(test_path,
                                                                                          IMAGE_WIDTH, IMAGE_HEIGHT,
@@ -56,6 +57,7 @@ def train():
         x_train = np.concatenate((x_train, x_test), axis=0)
         y_train = y_train + y_test
 
+    # Shuffle the training data
     x_train, y_train = shuffle(x_train, y_train)
 
     print('x_train shape:', x_train.shape)
@@ -91,7 +93,11 @@ def train():
 
     model.add(Flatten())
 
-    model.add(Dense(128, activation='relu'))
+    model.add(Dense(256, activation='relu'))
+    model.add(BatchNormalization())
+    model.add(Dropout(0.5))
+
+    model.add(Dense(256, activation='relu'))
     model.add(BatchNormalization())
     model.add(Dropout(0.5))
 
@@ -109,8 +115,8 @@ def train():
                      batch_size=batch_size,
                      epochs=epochs,
                      verbose=2,
-                     validation_data=(x_test, y_test)
-                     )
+                     validation_data=(x_test, y_test))
+
     # Evaluation
     score = model.evaluate(x_test, y_test, verbose=1)
     print('Test loss:', score[0])
@@ -138,14 +144,6 @@ def train():
     plt.show()
 
     model.save(model_name)
-
-    """
-    data_augmentation(x_train, y_train, x_test, y_test, model, 50)
-
-    score = model.evaluate(x_test, y_test, verbose=1)
-    print('Test loss:', score[0])
-    print('Test accuracy:', score[1])
-    """
 
 
 if __name__ == "__main__":

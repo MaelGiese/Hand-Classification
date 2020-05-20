@@ -165,7 +165,7 @@ def main(jump_q):
     fps = 0
     index = 0
 
-    cv2.namedWindow('Multi-Threaded Detection', cv2.WINDOW_NORMAL)
+    #cv2.namedWindow('Multi-Threaded Detection', cv2.WINDOW_NORMAL)
 
     while True:
         frame = video_capture.read()
@@ -201,7 +201,7 @@ def main(jump_q):
         if cropped_output is not None:
             cropped_output = cv2.cvtColor(cropped_output, cv2.COLOR_RGB2BGR)
             if args.display > 0:
-                cv2.namedWindow('Cropped', cv2.WINDOW_NORMAL)
+                #cv2.namedWindow('Cropped', cv2.WINDOW_NORMAL)
                 cv2.resizeWindow('Cropped', 450, 300)
                 cv2.imshow('Cropped', cropped_output)
                 # cv2.imwrite('image_' + str(num_frames) + '.png', cropped_output)
