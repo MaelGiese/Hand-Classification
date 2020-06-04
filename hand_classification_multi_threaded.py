@@ -3,7 +3,7 @@ import os
 # Use the CPU not the GPU
 os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
 
-import numpy
+import numpy as np
 
 import hand_classification_gui
 from hand_tracking.utils import detector_utils as detector_utils
@@ -39,8 +39,8 @@ def worker(input_q, output_q, cropped_output_q, classification_q, cap_params, fr
     sess = tf.compat.v1.Session(graph=detection_graph)
 
     model, classification_graph, session = classifier.load_KerasGraph(classification_graph_path)
-
     color = green
+    actual_class = 'None'
 
     while True:
         # print("> ===== in worker loop, frame ", frame_processed)
@@ -56,14 +56,15 @@ def worker(input_q, output_q, cropped_output_q, classification_q, cap_params, fr
             cropped_output = detector_utils.draw_box_on_image_and_return_cropped_image(
                 cap_params['num_hands_detect'], cap_params["score_thresh"],
                 scores, boxes, cap_params['im_width'], cap_params['im_height'],
-                frame, color)
+                frame, color, actual_class)
 
             if cropped_output is not None:
                 class_prob = classifier.classify(model, classification_graph, session, cropped_output, IMAGE_WIDTH,
                                                  IMAGE_HEIGHT)
                 classification_q.put(class_prob)
 
-                max = (numpy.where(class_prob == numpy.amax(class_prob))[0])[0]
+                max = (np.where(class_prob == np.amax(class_prob))[0])[0]
+                actual_class = classes[max]
 
                 if max == 0:
                     color = red
@@ -76,6 +77,7 @@ def worker(input_q, output_q, cropped_output_q, classification_q, cap_params, fr
             # add frame annotated with bounding box to queue
             cropped_output_q.put(cropped_output)
             output_q.put(frame)
+
             frame_processed += 1
         else:
             output_q.put(frame)
@@ -110,14 +112,14 @@ def main(jump_q):
         '--width',
         dest='width',
         type=int,
-        default=300,
+        default=500,
         help='Width of the frames in the video stream.')
     parser.add_argument(
         '-ht',
         '--height',
         dest='height',
         type=int,
-        default=200,
+        default=500,
         help='Height of the frames in the video stream.')
     parser.add_argument(
         '-ds',
@@ -165,14 +167,24 @@ def main(jump_q):
     fps = 0
     index = 0
 
-    cv2.namedWindow('Multi-Threaded Detection', cv2.WINDOW_NORMAL)
+
+
+    im_width = int(video_capture.size()[0])
+    im_height = int(video_capture.size()[1])
+
+    frame_img = np.zeros((im_height, im_width, 3), np.uint8)
+    cropped_img = np.zeros((int(im_height / 2), im_width, 3), np.uint8)
+    proba_img = np.zeros((int(im_height / 2), im_width, 3), np.uint8)
+
+    cv2.namedWindow('Multi-Threaded Detection')
+    #cv2.resizeWindow('Multi-Threaded Detection', 960, 1280)
 
     while True:
         frame = video_capture.read()
         frame = cv2.flip(frame, 1)
+        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
         index += 1
-
-        input_q.put(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
+        input_q.put(frame)
         output_frame = output_q.get()
         cropped_output = cropped_output_q.get()
 
@@ -187,9 +199,10 @@ def main(jump_q):
         fps = num_frames / elapsed_time
 
         if class_proba is not None:
-            hand_classification_gui.draw_classes_probabilities(class_proba, classes)
+            proba_img = hand_classification_gui.draw_classes_probabilities(class_proba, im_width, int(im_height / 2),
+                                                                           classes)
 
-            max = (numpy.where(class_proba == numpy.amax(class_proba))[0])[0]
+            max = (np.where(class_proba == np.amax(class_proba))[0])[0]
             print(classes[max])
 
             if not jump_q.full():
@@ -200,10 +213,13 @@ def main(jump_q):
 
         if cropped_output is not None:
             cropped_output = cv2.cvtColor(cropped_output, cv2.COLOR_RGB2BGR)
+            cropped_img = cv2.resize(cropped_output, (im_width, int(im_height / 2)))
             if args.display > 0:
-                cv2.namedWindow('Cropped', cv2.WINDOW_NORMAL)
-                cv2.resizeWindow('Cropped', 450, 300)
-                cv2.imshow('Cropped', cropped_output)
+                # cv2.namedWindow('Cropped', cv2.WINDOW_NORMAL)
+                # cv2.resizeWindow('Cropped', 450, 300)
+                # cv2.imshow('Cropped', cropped_output)
+                # cropped_img = np.zeros((im_height, im_width, 3), np.uint8)
+                # cropped_img = addImageOnTop(cropped_img, cropped_output)
                 # cv2.imwrite('image_' + str(num_frames) + '.png', cropped_output)
                 if cv2.waitKey(1) & 0xFF == ord('q'):
                     break
@@ -221,7 +237,8 @@ def main(jump_q):
                 if args.fps > 0:
                     detector_utils.draw_fps_on_image("FPS : " + str(int(fps)),
                                                      output_frame)
-                cv2.imshow('Multi-Threaded Detection', output_frame)
+                # cv2.imshow('Multi-Threaded Detection', output_frame)
+                frame_img = output_frame
                 if cv2.waitKey(1) & 0xFF == ord('q'):
                     break
             else:
@@ -234,12 +251,27 @@ def main(jump_q):
         else:
             # print("video end")
             break
+        img1 = np.vstack((cropped_img, proba_img))
+        img = np.hstack((frame_img, img1))
+
+        cv2.imshow('Multi-Threaded Detection', img)
+
     elapsed_time = (datetime.datetime.now() - start_time).total_seconds()
     fps = num_frames / elapsed_time
     print("fps", fps)
     pool.terminate()
     video_capture.stop()
     cv2.destroyAllWindows()
+
+
+def addImageOnTop(img1, img2):
+    rows, cols, channel = img2.shape
+    for i in range(rows):
+        for j in range(cols):
+            for c in range(channel):
+                img1[i][j][c] = img2[i][j][c]
+
+    return img1
 
 
 if __name__ == '__main__':

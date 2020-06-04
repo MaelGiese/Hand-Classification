@@ -3,7 +3,7 @@ import numpy as np
 from random import randint
 
 
-def draw_classes_probabilities(values, names=None):
+def draw_classes_probabilities(values, width, height, names=None):
     if names is None:
         names = ['', '', '', '', '', '']
 
@@ -17,7 +17,7 @@ def draw_classes_probabilities(values, names=None):
     fontColor = (255, 255, 255)
     lineType = 2
 
-    blank = np.zeros((350, 600, 3), np.uint8)
+    blank = np.zeros((height, width, 3), np.uint8)
 
     for i in range(nb_classes):
         if values[i] > 0.7:
@@ -31,7 +31,8 @@ def draw_classes_probabilities(values, names=None):
         cv2.putText(blank, str(values[i]), (left_margin + 200, margin + int(margin * i) + int(thickness / 2)), font,
                     fontScale, fontColor, lineType)
 
-    cv2.imshow("Classes probalities", blank)
+    # cv2.imshow("Classes probalities", blank)
+    return blank
 
 
 def test():
@@ -41,7 +42,7 @@ def test():
     while True:
         for i in range(len(values)):
             values[i] = randint(0, 100) / 100
-        draw_classes_probabilities(values, names)
+        draw_classes_probabilities(values, 480, int(640/2), names)
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
     cv2.destroyAllWindows()

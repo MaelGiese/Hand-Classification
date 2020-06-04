@@ -63,7 +63,8 @@ def draw_box_on_image(num_hands_detect, score_thresh, scores, boxes, im_width, i
 # draw the detected bounding boxes on the images
 # You can modify this to also draw a label.
 def draw_box_on_image_and_return_cropped_image(num_hands_detect, score_thresh, scores, boxes, im_width, im_height,
-                                               image_np, color):
+                                               image_np, color, previousClass):
+
     for i in range(num_hands_detect):
         if scores[i] > score_thresh:
             (left, right, top, bottom) = (boxes[i][1] * im_width, boxes[i][3] * im_width,
@@ -74,6 +75,10 @@ def draw_box_on_image_and_return_cropped_image(num_hands_detect, score_thresh, s
             p1 = (int(left), int(top))
             p2 = (int(right), int(bottom))
             cv2.rectangle(image_np, p1, p2, color, 3, 1)
+
+            ptext = (int(left), int(top-10))
+
+            cv2.putText(image_np, previousClass, ptext, cv2.FONT_HERSHEY_SIMPLEX, 0.75, color, 1)
             return cropped_image
 
 

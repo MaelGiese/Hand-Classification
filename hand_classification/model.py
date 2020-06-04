@@ -14,7 +14,7 @@ import matplotlib.pyplot as plt
 
 def train():
     batch_size = 512
-    epochs = 15
+    epochs = 50
     learning_rate = 0.01
     model_name = "models/hand_classification_model.h5"
 
@@ -86,7 +86,7 @@ def train():
     model.add(BatchNormalization())
     model.add(Dropout(0.5))
 
-    model.add(Conv2D(96, kernel_size=(3, 3), activation='relu'))
+    model.add(Conv2D(128, kernel_size=(3, 3), activation='relu'))
     model.add(MaxPooling2D(pool_size=(2, 2)))
     model.add(BatchNormalization())
     model.add(Dropout(0.5))
@@ -97,12 +97,10 @@ def train():
     model.add(BatchNormalization())
     model.add(Dropout(0.5))
 
-    model.add(Dense(256, activation='relu'))
-    model.add(BatchNormalization())
-    model.add(Dropout(0.5))
-
     model.add(Dense(128, activation='relu'))
     model.add(BatchNormalization())
+
+
 
     model.add(Dense(num_classes, activation='softmax'))
 
