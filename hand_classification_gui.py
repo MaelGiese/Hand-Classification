@@ -30,8 +30,6 @@ def draw_classes_probabilities(values, width, height, names=None):
                     lineType)
         cv2.putText(blank, str(values[i]), (left_margin + 200, margin + int(margin * i) + int(thickness / 2)), font,
                     fontScale, fontColor, lineType)
-
-    # cv2.imshow("Classes probalities", blank)
     return blank
 
 
@@ -42,7 +40,8 @@ def test():
     while True:
         for i in range(len(values)):
             values[i] = randint(0, 100) / 100
-        draw_classes_probabilities(values, 480, int(640/2), names)
+        img = draw_classes_probabilities(values, 480, int(640/2), names)
+        cv2.imshow("Classes probalities", img)
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
     cv2.destroyAllWindows()

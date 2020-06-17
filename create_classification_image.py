@@ -170,7 +170,7 @@ if __name__ == '__main__':
         # draw bounding boxes on frame
         cropped_output = detector_utils.draw_box_on_image_and_return_cropped_image(num_hands_detect, args.score_thresh,
                                                                                    scores, boxes, im_width, im_height,
-                                                                                   image_np, color)
+                                                                                   image_np, color, '')
 
         # Calculate Frames per second (FPS)
         num_frames += 1

@@ -264,15 +264,6 @@ def main(jump_q):
     cv2.destroyAllWindows()
 
 
-def addImageOnTop(img1, img2):
-    rows, cols, channel = img2.shape
-    for i in range(rows):
-        for j in range(cols):
-            for c in range(channel):
-                img1[i][j][c] = img2[i][j][c]
-
-    return img1
-
 
 if __name__ == '__main__':
     main(False)

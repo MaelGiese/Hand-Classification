@@ -14,8 +14,8 @@ import matplotlib.pyplot as plt
 
 def train():
     batch_size = 512
-    epochs = 50
-    learning_rate = 0.01
+    epochs = 75
+    learning_rate = 0.003
     model_name = "models/hand_classification_model.h5"
 
     train_path = 'Dataset/Train/'
@@ -25,7 +25,7 @@ def train():
     input_shape = (IMAGE_WIDTH, IMAGE_HEIGHT, 3)
 
     augment_data = True
-    merge_train_and_test = False
+    merge_train_and_test = True
 
     # Build train dataset
     x_train, y_train = dataset.build_dataset(train_path, IMAGE_WIDTH, IMAGE_HEIGHT)
@@ -47,10 +47,10 @@ def train():
     ############################# Add test dataset to the train dataset ########################################
     if merge_train_and_test:
         x_test_augmented, y_test_augmented = data_augmentation.build_augmented_dataset(test_path,
-                                                                                         IMAGE_WIDTH, IMAGE_HEIGHT,
-                                                                                         flipped=True, saturated=True,
-                                                                                         bright=True, cropped=True,
-                                                                                         grayscaled=True)
+                                                                                       IMAGE_WIDTH, IMAGE_HEIGHT,
+                                                                                       flipped=True, saturated=True,
+                                                                                       bright=True, cropped=True,
+                                                                                       grayscaled=True)
         x_test = np.concatenate((x_test, x_test_augmented), axis=0)
         y_test = y_test + y_test_augmented
 
@@ -100,13 +100,13 @@ def train():
     model.add(Dense(128, activation='relu'))
     model.add(BatchNormalization())
 
-
-
     model.add(Dense(num_classes, activation='softmax'))
 
     model.compile(loss=keras.losses.categorical_crossentropy,
                   optimizer=keras.optimizers.Adam(lr=learning_rate),
                   metrics=['acc'])
+
+    tf.keras.utils.plot_model(model, show_shapes=True, dpi=64)
 
     ####### TRAINING #######
     hist = model.fit(x_train, y_train,

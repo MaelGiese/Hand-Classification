@@ -104,37 +104,50 @@ def build_augmented_dataset(dir_path, IMAGE_WIDTH, IMAGE_HEIGHT, flipped=False, 
     return images, images_class
 
 
-def create_augmented_data_from_directory(path, IMG_WIDTH, IMG_HEIGHT):
-    image_string = tf.io.read_file(path)
-    image = tf.image.decode_png(image_string, channels=3)
-
-    saturated = tf.image.adjust_saturation(image, 3)
-    visualize(image, saturated)
-
-    bright = tf.image.adjust_brightness(image, 0.4)
-    visualize(image, bright)
-
-
-def visualize(original, augmented):
+def visualize(original, augmented, augmented2):
     fig = plt.figure()
-    plt.subplot(1, 2, 1)
+    plt.subplot(1, 3, 1)
     plt.title('Original image')
     plt.imshow(original)
 
-    plt.subplot(1, 2, 2)
-    plt.title('Augmented image')
+    plt.subplot(1, 3, 2)
+    plt.title('Flipped image')
     plt.imshow(augmented)
+
+    plt.subplot(1, 3, 3)
+    plt.title('Saturated image')
+    plt.imshow(augmented2)
 
     plt.show()
 
 
 if __name__ == "__main__":
-    dir_path = '../Dataset/Train/'
-    IMAGE_WIDTH = 28
-    IMAGE_HEIGHT = 28
+    dir_path = '../Dataset/Test/'
+    IMAGE_WIDTH = 64
+    IMAGE_HEIGHT = 64
 
     x, y = build_augmented_dataset(dir_path, IMAGE_WIDTH, IMAGE_HEIGHT, flipped=False, saturated=False, bright=False,
-                                   cropped=True, grayscaled=False)
-
+                                  cropped=True, grayscaled=False)
     print(x.shape)
     print(y)
+
+    """
+    image_string = tf.io.read_file(os.path.join(dir_path, 'Palm/SET_0/Palm_104.png'))
+    image = tf.image.decode_png(image_string, channels=3)
+    image = tf.image.resize(image, (IMAGE_WIDTH, IMAGE_HEIGHT))
+
+    flipped_img = tf.image.flip_left_right(image)
+    flipped_img = tf.keras.preprocessing.image.img_to_array(flipped_img)
+
+    saturated_img = tf.image.adjust_saturation(image, 5)
+    saturated_img = tf.keras.preprocessing.image.img_to_array(saturated_img)
+
+    image = tf.keras.preprocessing.image.img_to_array(image)
+
+    image = (image / 127.5)
+    flipped_img = (flipped_img / 127.5)
+    saturated_img = (saturated_img / 127.5)
+
+    visualize(image, flipped_img, saturated_img)
+    """
+
