@@ -1,13 +1,19 @@
 # Hand-Classification
 
 ## Utilitaire de prise de photo
-Utiliser l'utilitaire de prise de photo
 - Lancer le script : python create_classification_image.py
 - Choisir une pose de main parmis les poses proposées (Fist, OK, Palm).
 - Une fois que la fenêtre de webcam est lancée un carré vert devrait apparaître autour d’une main si il y en a une dans l’image, cela signifie que le programme détecte une main.
  - Appuyer sur ‘s’ pour enregistrer cette image de main.
  - Si aucune main n’est détectée, aucune image ne sera enregistrée en appuyant sur ‘s’.Le carré vert devient rouge si une image est enregistrée.
  - Pour fermer la fenêtre appuyer sur 
+
+## Stockage des photos
+Les photos sont stockées dans le fichier “hand_classification/Dataset” à partir de la racine du projet.
+
+Arborescence des dossiers de stockage
+![image](https://user-images.githubusercontent.com/55782726/186440988-841ced32-9ecd-4392-8cec-5b5c00f0d3fe.png)
+
 
 
 Notice :
