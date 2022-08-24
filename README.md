@@ -41,20 +41,16 @@ Les données d'entraînement du modèle on étaient augmentées, on a 3 000 imag
 
 
 ### Résultat 
+[![](https://raw.githubusercontent.com/MaelGiese/Hand-Classification/master/Training.png)]
+- Train loss: 0.1501
+- Train accuracy: 0.9457
 
-[![]([https://raw.githubusercontent.com/MaelGiese/Hand-Classification/master/Arbo.png](https://raw.githubusercontent.com/MaelGiese/Hand-Classification/master/Training.png))]
-Train loss: 0.1501
-Train accuracy: 0.9457
-
-Test loss: 0.40203176679758307
-Test accuracy: 0.8923077
-
+- Test loss: 0.40203176679758307
+- Test accuracy: 0.8923077
 
 
-
-Notice :
-https://docs.google.com/document/d/1lE9REC806BY9a9yu7aqw8YeNyGQ-wasRhewcrX4AqMY/edit?usp=sharing
-
-Demo :
-
+## Demo :
 [![](http://img.youtube.com/vi/8GA2EqDS1TM/0.jpg)](http://www.youtube.com/watch?v=8GA2EqDS1TM "Demo")
+
+## Notice :
+https://docs.google.com/document/d/1lE9REC806BY9a9yu7aqw8YeNyGQ-wasRhewcrX4AqMY/edit?usp=sharing
