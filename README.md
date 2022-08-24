@@ -57,5 +57,5 @@ Les données d'entraînement du modèle on étaient augmentées, on a 3 000 imag
 https://docs.google.com/document/d/1lE9REC806BY9a9yu7aqw8YeNyGQ-wasRhewcrX4AqMY/edit?usp=sharing
 
 
-## Hand Tracking
+## References
 Victor Dibia, HandTrack: A Library For Prototyping Real-time Hand TrackingInterfaces using Convolutional Neural Networks, https://github.com/victordibia/handtracking
