@@ -58,4 +58,5 @@ https://docs.google.com/document/d/1lE9REC806BY9a9yu7aqw8YeNyGQ-wasRhewcrX4AqMY/
 
 
 ## References
-Victor Dibia, HandTrack: A Library For Prototyping Real-time Hand TrackingInterfaces using Convolutional Neural Networks, https://github.com/victordibia/handtracking
+- Victor Dibia, HandTrack: A Library For Prototyping Real-time Hand TrackingInterfaces using Convolutional Neural Networks, https://github.com/victordibia/handtracking
+- https://github.com/MrEliptik/HandPose
