@@ -12,7 +12,7 @@
 Les photos sont stockées dans le fichier “hand_classification/Dataset” à partir de la racine du projet.
 
 ### Arborescence des dossiers de stockage
-[![](https://raw.githubusercontent.com/MaelGiese/Hand-Classification/master/Arbo.png)]
+![](https://raw.githubusercontent.com/MaelGiese/Hand-Classification/master/Arbo.png)
 
 Les données sont réparties en données de test et d'entraînement pour pouvoir comparer l’amélioration du modèle de classification de manière fiable (le but est d’avoir toujours les mêmes données de test).
 On a un dossier pour chaque classe (Fist, OK, Palm), chacun de ces dossiers est réparti en jeu de données appelé ‘SET_X’.
