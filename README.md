@@ -12,8 +12,8 @@
 Les photos sont stockées dans le fichier “hand_classification/Dataset” à partir de la racine du projet.
 
 Arborescence des dossiers de stockage
-
-[![]([http://img.youtube.com/vi/8GA2EqDS1TM/0.jpg](https://github.com/MaelGiese/Hand-Classification/blob/master/Arbo.png))]
+https://raw.githubusercontent.com/MaelGiese/Hand-Classification/master/Arbo.png
+[![](https://raw.githubusercontent.com/MaelGiese/Hand-Classification/master/Arbo.png)]
 
 Notice :
 https://docs.google.com/document/d/1lE9REC806BY9a9yu7aqw8YeNyGQ-wasRhewcrX4AqMY/edit?usp=sharing
